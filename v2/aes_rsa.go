@@ -42,7 +42,7 @@ func EnAesRsa(plaintext, pubKey string) (ciphertext string, err error) {
 			err = e.(error)
 		}
 		if err != nil {
-			err = errors.New("EnAesRsaError:" + err.Error())
+			err = errors.New("EN_AES_RSA: 加密出错 " + err.Error())
 		}
 	}()
 
@@ -62,7 +62,7 @@ func EnAesRsa(plaintext, pubKey string) (ciphertext string, err error) {
 	} else {
 		derBytes, err = base64.StdEncoding.DecodeString(pubKey)
 		if err != nil {
-			err = errors.New("base64.StdEncoding.DecodeString error " + err.Error())
+			err = errors.New("base64.Decode error " + err.Error())
 			return
 		}
 	}
@@ -103,7 +103,7 @@ func DeAesRsa(ciphertext, priKey string) (plaintext string, err error) {
 			err = e.(error)
 		}
 		if err != nil {
-			err = errors.New("DeAesRsaError:" + err.Error())
+			err = errors.New("DE_AES_RSA:解密出错" + err.Error())
 		}
 	}()
 	arr := strings.Split(ciphertext, ":")
@@ -165,7 +165,6 @@ func DeAesRsa(ciphertext, priKey string) (plaintext string, err error) {
 	return
 }
 
-//对明文进行填充
 func Padding(plainText []byte, blockSize int) []byte {
 	n := blockSize - len(plainText)%blockSize //计算要填充的长度
 	temp := bytes.Repeat([]byte{byte(n)}, n)  //对原来的明文填充n个n
@@ -173,14 +172,13 @@ func Padding(plainText []byte, blockSize int) []byte {
 	return plainText
 }
 
-//对密文删除填充
 func UnPadding(cipherText []byte) []byte {
 	end := cipherText[len(cipherText)-1]               //取出密文最后一个字节end
 	cipherText = cipherText[:len(cipherText)-int(end)] //删除填充
 	return cipherText
 }
 
-// Rand32 使用crypto/rand 随机赋值byte数组， 然后md5返回32位十六进制字符串
+// Rand32 生成32位随机字符串 使用crypto/rand 随机赋值byte数组， 然后md5返回32位十六进制字符串
 func Rand32() string {
 	var b = make([]byte, 48)
 	if _, err := rand.Read(b); err != nil {

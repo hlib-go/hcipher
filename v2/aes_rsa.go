@@ -45,6 +45,13 @@ func EnAesRsa(plaintext, pubKey string) (ciphertext string, err error) {
 			err = errors.New("EN_AES_RSA: 加密出错 " + err.Error())
 		}
 	}()
+	if plaintext == "" {
+		return
+	}
+	if pubKey == "" {
+		err = errors.New("公钥不能为空")
+		return
+	}
 
 	// 随机32位字符串作为AES密钥
 	s1 := Rand32()
@@ -106,6 +113,14 @@ func DeAesRsa(ciphertext, priKey string) (plaintext string, err error) {
 			err = errors.New("DE_AES_RSA:解密出错" + err.Error())
 		}
 	}()
+	if ciphertext == "" {
+		return
+	}
+	if priKey == "" {
+		err = errors.New("私钥不能为空")
+		return
+	}
+
 	arr := strings.Split(ciphertext, ":")
 	s2 := arr[0]
 	s3 := arr[1]
